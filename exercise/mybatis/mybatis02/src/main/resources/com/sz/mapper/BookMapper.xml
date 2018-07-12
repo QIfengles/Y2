@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  mybatis的具体的dao对应的配置文件，实现数据访问层
+  namespace接dao接口进行绑定
+-->
+<mapper namespace="com.sz.mapper.BookMapper">
+
+
+
+
+    <resultMap id="resultMap" type="com.sz.entity.Book">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="isbn" column="isbn"></result>
+        <result property="price" column="price"></result>
+        <result property="discount" column="discount"></result>
+        <result property="publisher" column="publisher"></result>
+    </resultMap>
+
+
+<insert id="insertInfo" parameterType="com.sz.entity.Book">
+    <!--添加数据-->
+    insert into bookinfo(
+    <if test="name != null">
+         name)
+    </if>
+    values(
+    <if test="name != null">
+        #{name})
+    </if>
+</insert>
+    <!--查询数据-->
+    <select id="selAllBook" resultMap="resultMap">
+       select * from bookinfo
+        <!--传统的避免and操作符语法错误的一种方式，1=1
+        where会自动帮我们去除前面多余的and符号，
+        where下的第一个if里面的and可以写，可以不写，后面
+        都要写,只能处理前缀
+        -->
+       <where>
+           <if test="id!=null">
+               id = #{id}
+           </if>
+           <if test="name !=null">
+               and name = #{name}
+           </if>
+           <if test="isbn !=null">
+               and isbn = #{isbn}
+           </if>
+           <if test="price !=null">
+               and price = #{price}
+           </if>
+           <if test="discount !=null">
+               and discount = #{discount}
+           </if>
+           <if test="publisher !=null">
+               and publisher = #{publisher}
+           </if>
+       </where>
+    </select>
+    <!--查询价格-->
+<select id="sleByPrice" resultMap="resultMap">
+select 
+<choose>
+    <when test="price==1">
+        id,name
+    </when>
+    <otherwise>
+        id,price
+    </otherwise>
+</choose>
+    from bookinfo
+</select>
+    <!--修改数据-->
+    <update id="updateInfo">
+        <if test="id!=null">
+            update bookinfo
+            <set>
+                <if test="name!= null">
+                    name = #{name},
+                </if>
+                <if test="isbn!=null">
+                    isbn = #{isbn},
+                </if>
+                <if test="price!=null">
+                    price = #{price},
+                </if>
+                <if test="discount!=null">
+                    discount = #{discount},
+                </if>
+                <if test="publisher!=null">
+                    publisher = #{publisher},
+                </if>
+            </set>
+            <where>
+                    id = #{id}
+            </where>
+        </if>
+    </update>
+    <!--修改2-->
+    <update id="updateInfoTwo">
+        update bookinfo
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!= null">
+                name = #{name},
+            </if>
+            <if test="isbn!=null">
+                isbn = #{isbn},
+            </if>
+            <if test="price!=null">
+                price = #{price},
+            </if>
+            <if test="discount!=null">
+                discount = #{discount},
+            </if>
+            <if test="publisher!=null">
+                publisher = #{publisher},
+            </if>
+        </trim>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id!=null">
+                and bookinfo = #{id}
+            </if>
+        </trim>
+    </update>
+
+</mapper>
