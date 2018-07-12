@@ -126,5 +126,13 @@ select
             </if>
         </trim>
     </update>
-
+    <!--根据指定的条件删除书本-->
+<delete id="deleteInfo" parameterType="com.sz.entity.Book">
+   delete from bookinfo
+      <where>
+          <if test="id!=null">
+              id = #{id}
+          </if>
+      </where>
+</delete>
 </mapper>

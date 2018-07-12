@@ -1,11 +1,13 @@
 package com.sz;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import com.sz.entity.Book;
 import com.sz.mapper.BookMapper;
 import com.sz.util.MybatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ import java.util.List;
 public class BookTest {
 
     /**
-     * 添加数据
+     * 添加数据aaaaa
      */
     @Test
     public void getInsertBook(){
@@ -88,6 +90,18 @@ public class BookTest {
         book.setPublisher("dfd");
         mapper.updateInfo(book);
         session.commit();
+    }
+
+    /**
+     * 删除书本
+     */
+    @Test
+    public void getDeletBook(){
+           SqlSession session = MybatisUtil.getSession();
+           int row= session.getMapper(BookMapper.class).deleteInfo(2);
+           System.out.println("影响的行数"+row);
+           session.commit();
+           session.close();
     }
 
 

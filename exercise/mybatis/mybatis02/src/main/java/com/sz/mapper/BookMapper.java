@@ -18,6 +18,6 @@ public interface BookMapper {
     //修改2
     int updateInfoTwo(Book book);
     //删除书本
-    int deleteInfo(Integer id);
+    int deleteInfo(@Param("id") Integer id);
 
 }
