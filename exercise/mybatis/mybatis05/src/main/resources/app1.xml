@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.sz.old.been.HelloSpring" id="spring">
+        <property name="name" value="花"></property>
+        <property name="luckNum" value="8"></property>
+        <property name="color" value="紫"></property>
+
+    </bean>
+
+    <bean class="com.sz.old.been.Dog" id="dog">
+        <property name="name" value="贝贝"></property>
+        <property name="age" value="3"></property>
+        <property name="health" value="100"></property>
+        <property name="colour" value="棕白色"></property>
+    </bean>
+
+    <bean class="com.sz.old.been.Person" id="person3">
+        <property name="name_person" value="张嘎"></property>
+        <property name="words_person" value="三天不打了鬼子，手都痒痒！"></property>
+    </bean>
+    <bean class="com.sz.old.been.Person" id="person2">
+        <property name="name_person" value="Rod"></property>
+        <property name="words_person" value="世界上有10种人，认识二进制的和不认识二进制的"></property>
+    </bean>
+
+
+    <!--注入-->
+    <bean class="com.sz.news.bean.Boy" id="boy">
+        <property name="name" value="吴瀚"></property>
+        <property name="dog" ref="dog"></property>
+    </bean>
+
+    <bean class="com.sz.news.bean.Boy" id="boy2">
+        <constructor-arg name="name" value="花花"/>
+        <constructor-arg name="dog" ref="dog"/>
+    </bean>
+
+
+    <bean class="com.sz.news.bean.Car" id="car">
+        <constructor-arg type="java.lang.Double" index="0" value="33.9"/>
+        <constructor-arg type="java.lang.String" index="1" value="小车"/>
+    </bean>
+
+
+        </beans>
