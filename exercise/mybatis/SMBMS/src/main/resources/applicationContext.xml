@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <!-- <property name="url">
+            <value><![CDATA[jdbc:mysql://127.0.0.1:3306/smbms?
+                    useUnicode=true&characterEncoding=utf-8]]></value>
+        </property> -->
+        <!--<property name="url" value="jdbc:mysql://127.0.0.1:3306/smbms?-->
+                        <!--useUnicode=true&amp;characterEncoding=utf-8" />-->
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/smbms?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="root" />
+        <property name="password" value="111111" />
+    </bean>
+
+    <!-- 配置SqlSessionFactoryBean -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 引用数据源组件 -->
+        <property name="dataSource" ref="dataSource" />
+        <!-- 引用MyBatis配置文件中的配置 -->
+        <property name="configLocation" value="classpath:mybatis-cfg.xml" />
+    </bean>
+    <!-- 配置DAO -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
+        <property name="basePackage" value="cn.smbms.dao" />
+    </bean>
+    <!-- 配置业务Bean -->
+    <!-- <bean id="userService" class="cn.smbms.service.user.UserServiceImpl">
+        <property name="userMapper" ref="userMapper" />
+    </bean> -->
+    <context:component-scan base-package="cn.smbms.service" />
+    <!-- 定义事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <tx:annotation-driven />
+
+</beans>

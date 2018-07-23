@@ -1,0 +1,108 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smbms.dao.user.UserDao">
+    <!-- 根据roleId获取用户列表 association start-->
+    <resultMap type="cn.smbms.pojo.User" id="userRoleResult">
+        <id property="id" column="id"/>
+        <result property="userCode" column="userCode" />
+        <result property="userName" column="userName" />
+        <result property="gender" column="gender"/>
+        <result property="createdBy" column="createdBy"/>
+        <result property="birthday" column="birthday"/>
+        <result property="phone" column="phone"/>
+        <result property="userRole" column="userRole" />
+        <association property="role" javaType="cn.smbms.pojo.Role" >
+            <id property="id" column="r_id"/>
+            <result property="roleCode" column="roleCode"/>
+            <result property="roleName" column="roleName"/>
+        </association>
+    </resultMap>
+
+
+    <select id="selectUser" resultType="cn.smbms.pojo.User" parameterType="cn.smbms.pojo.User">
+        select * from smbms_user where userCode=#{userCode }
+    </select>
+
+    <select id="getUserCount" resultType="int">
+        SELECT COUNT(1)FROM `smbms_user`
+        <where>
+
+            <if test="userName != null and userName != ''">
+                AND userName LIKE CONCAT('%',#{userName},'%')
+            </if>
+            <if test="userRole != null and userRole gt 0">
+                and userRole = #{userRole}
+            </if>
+            and  createdBy=#{createdBy}
+        </where>
+    </select>
+    <select id="getUserList" resultMap="userRoleResult">
+        SELECT t1.* ,t2.roleName
+        FROM smbms_user t1 , `smbms_role` t2
+        <where>
+            t1.userRole = t2.id
+            <if test="userName != null and userName != ''">
+                AND t1.userName LIKE CONCAT('%',#{userName},'%')
+            </if>
+            <if test="userRole != null and userRole gt 0">
+                and t2.id = #{userRole}
+            </if>
+            and t1.createdBy=#{createdBy}
+        </where>
+        LIMIT #{currentPageNo},#{pageSize};
+    </select>
+
+    <delete id="deleteUserById">
+         DELETE
+        FROM `smbms_user`
+        WHERE id = #{delId}
+    </delete>
+
+    <!-- 根据用户IDH获取用户信息 association start-->
+    <resultMap type="cn.smbms.pojo.User" id="getUserByIdResult">
+        <id property="id" column="id"/>
+        <result property="userCode" column="userCode" />
+        <result property="userName" column="userName" />
+        <result property="userPassword" column="userPassword" />
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="userRole" column="userRole" />
+        <association property="role" javaType="cn.smbms.pojo.Role" >
+            <id property="id" column="r_id"/>
+            <result property="roleName" column="roleName"/>
+        </association>
+    </resultMap>
+    <select id="getUserById" resultMap="getUserByIdResult">
+        select u.*,r.id as r_id,r.roleName from smbms_user u,smbms_role r where u.id=#{id} and u.userRole = r.id
+    </select>
+    <update id="modify">
+        update smbms_user set userName=#{userName},gender=#{gender},birthday=#{birthday},phone=#{phone},address=#{address},userRole=#{userRole},modifyBy=#{modifyBy},modifyDate=#{modifyDate} where id = #{id}
+    </update>
+    <update id="updatePwd">
+        update smbms_user set userPassword= #{pwd} where id = #{id}
+    </update>
+    <insert id="add">
+        insert into smbms_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        userCode,userName,userPassword,userRole,gender,birthday,phone,
+            <if test="address!=null || address!=''">
+                address,
+            </if>
+
+            creationDate,createdBy
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        #{userCode},#{userName},#{userPassword},#{userRole},#{gender},#{birthday},#{phone},
+            <if test="address!=null || address!=''">
+                #{address},
+            </if>
+            #{creationDate},#{createdBy}
+        </trim>
+    </insert>
+
+
+</mapper>
